@@ -8,18 +8,19 @@ export default function InTheaters () {
 
     React.useEffect(()=>{
         const promise = axios.get("https://mock-api.driven.com.br/api/v5/cineflex/movies");
-        promise.then(response =>
+        promise.then(response =>{
             setMovieList(response.data.map(movie=>({
                 image:movie.posterURL,
-                ID:movie.id
+                ID:movie.id,
+                title:movie.title
             })
-                ))
-        )
+        ))
+    })
     },[])
 
     function MoviePoster (props) {
         return(
-        <Link key={props.index} to={`/movie/${props.index}`}>
+        <Link to={`/sessoes/${props.index}`}>
             <MPoster>
                 <img  src={props.image} alt="" />
             </MPoster>
@@ -31,7 +32,7 @@ export default function InTheaters () {
         <Container>
             <h2>Selecione o filme</h2>
             <MovieList>
-                {movieList.map(movie => <MoviePoster index={movie.ID} image={movie.image} />)}
+                {movieList.map(movie => <MoviePoster key={movie.ID} index={movie.ID} image={movie.image} />)}
             </MovieList>
         </Container>
     );

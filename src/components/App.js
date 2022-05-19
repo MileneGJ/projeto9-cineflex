@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
 import styled from 'styled-components'
 import InTheaters from './InTheaters'
 import Movie from './Movie'
@@ -6,16 +7,17 @@ import Session from './Session'
 import Success from './Success'
 
 export default function App () {
+
     return (
     <BrowserRouter>
         <Header>
             <h1>CINEFLEX</h1>
         </Header>
         <Routes>
-        <Route path="/" element={<InTheaters/>} />
-        <Route path="/movie/:movieID" element={<Movie/>} />
-        <Route path="/session/:sessionID" element={<Session/>} />
-        <Route path="/success" element={<Success/>} />
+        <Route path="/" element={<InTheaters />} />
+        <Route path="/sessoes/:idFilme" element={<Movie />} />
+        <Route path="/session/:sessionID" element={<Session />} />
+        <Route path="/success" element={<Success />} />
         </Routes>
     </BrowserRouter>
     )
