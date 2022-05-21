@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import styled from 'styled-components'
-import InTheaters from './InTheaters'
-import Movie from './Movie'
-import Session from './Session'
-import Success from './Success'
+import styled from 'styled-components';
+import InTheaters from './InTheaters';
+import Movie from './Movie';
+import Session from './Session';
+import Success from './Success';
 
 export default function App () {
 

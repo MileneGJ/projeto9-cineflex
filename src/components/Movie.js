@@ -2,6 +2,7 @@ import React from "react";
 import styled from 'styled-components'
 import axios from 'axios'
 import { Link, useParams } from 'react-router-dom';
+import Footer from "./Footer.js";
 
 export default function Movie() {
     const [showtimes, setShowtimes] = React.useState([]);
@@ -20,22 +21,14 @@ export default function Movie() {
 
     function Showtime({ days }) {
         return (
-            <>
+            <div>
                 <p>{days.weekday} - {days.date}</p>
                 {days.showtimes.map(times =>
-                    <Link to={`/assentos/${times.id}`}>
-                    <button key={times.id}>{times.name}</button>
+                    <Link to={`/assentos/${times.id}`} key={times.id}>
+                    <button >{times.name}</button>
                     </Link>
                 )}
-            </>
-        )
-    }
-
-    function MoviePoster (props) {
-        return(
-            <MPoster>
-                <img  src={props.image} alt="" />
-            </MPoster>
+            </div>
         )
     }
 
@@ -45,10 +38,7 @@ export default function Movie() {
             <Showtimes>
                 {showtimes.days ? showtimes.days.map(day => <Showtime key={day.id} days={day} />) : "Carregando"}
             </Showtimes>
-            <Footer>
-                <MoviePoster image={showtimes.image} />
-                <h3>{showtimes.title}</h3>
-            </Footer>
+            <Footer image={showtimes.image} title={showtimes.title} selectedShowtime={false} day={""} time={""} />
         </Container>
     )
 }
@@ -83,40 +73,5 @@ button{
 
 p{
     margin:30px 0;
-}
-`
-
-const Footer = styled.div`
-width:100%;
-height:120px;
-padding: 0 30px;
-position:fixed;
-bottom:0;
-left:0;
-background-color:#DFE6ED;
-border:solid 1px #9EADBA;
-display:flex;
-align-items:center;
-
-
-h3{
-    color:#293845;
-    font-size:26px;
-    margin-left:15px;
-}
-`
-
-const MPoster = styled.div` 
-width:64px;
-height:90px;
-padding:5px;
-overflow:hidden;
-background-color:#FFFFFF;
-display:flex;
-justify-content:center;
-box-shadow: 0px 1px 2px 1px rgba(50,50,50,0.1);
-
-img{
-    height:90px;
 }
 `
