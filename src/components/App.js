@@ -25,7 +25,7 @@ export default function App () {
         <Route path="/" element={<InTheaters />} />
         <Route path="/sessoes/:idFilme" element={<Movie />} />
         <Route path="/assentos/:idSessao" element={<Session reservationInfo={reservationInfo} setReservationInfo={setReservationInfo} />} />
-        <Route path="/sucesso" element={<Success reservationInfo={reservationInfo} />} />
+        <Route path="/sucesso" element={<Success reservationInfo={reservationInfo} setReservationInfo={setReservationInfo} />} />
         </Routes>
     </BrowserRouter>
     )

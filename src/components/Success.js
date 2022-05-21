@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-export default function Success({ reservationInfo }) {
+export default function Success({ reservationInfo, setReservationInfo }) {
     const navigate = useNavigate();
 
     const purchase = [{
@@ -17,13 +17,25 @@ export default function Success({ reservationInfo }) {
         `CPF: ${reservationInfo.userDoc}`]
     }]
 
-    function PurchaseData({ title, info }) {
+    function PurchaseData({ title, info}) {
         return (
             <div>
                 <h4>{title}</h4>
-                {info.map(text=> <p>{text}</p>)}
+                {info.map((text,index)=> <p key={index}>{text}</p>)}
             </div>
         )
+    }
+
+    function reload (){
+        setReservationInfo({
+            title: "",
+            day: "",
+            time: "",
+            seats: [],
+            userName: "",
+            userDoc: ""
+        });
+        navigate("/");
     }
 
     return (
@@ -32,7 +44,7 @@ export default function Success({ reservationInfo }) {
             <InfoPurchase>
                 {purchase.map((p,index) => <PurchaseData key={index} title={p.title} info={p.info} />)}
             </InfoPurchase>
-            <button onClick={()=>navigate("/")}>Voltar para Home</button>
+            <button onClick={reload}>Voltar para Home</button>
         </Container>
     )
 }
