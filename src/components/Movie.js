@@ -1,8 +1,7 @@
-
 import React from "react";
 import styled from 'styled-components'
 import axios from 'axios'
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 export default function Movie() {
     const [showtimes, setShowtimes] = React.useState([]);
@@ -24,7 +23,9 @@ export default function Movie() {
             <>
                 <p>{days.weekday} - {days.date}</p>
                 {days.showtimes.map(times =>
+                    <Link to={`/assentos/${times.id}`}>
                     <button key={times.id}>{times.name}</button>
+                    </Link>
                 )}
             </>
         )
@@ -113,6 +114,7 @@ overflow:hidden;
 background-color:#FFFFFF;
 display:flex;
 justify-content:center;
+box-shadow: 0px 1px 2px 1px rgba(50,50,50,0.1);
 
 img{
     height:90px;

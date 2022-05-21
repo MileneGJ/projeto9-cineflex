@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React from "react";
 import styled from 'styled-components'
 import InTheaters from './InTheaters'
 import Movie from './Movie'
@@ -16,7 +15,7 @@ export default function App () {
         <Routes>
         <Route path="/" element={<InTheaters />} />
         <Route path="/sessoes/:idFilme" element={<Movie />} />
-        <Route path="/session/:sessionID" element={<Session />} />
+        <Route path="/assentos/:idSessao" element={<Session />} />
         <Route path="/success" element={<Success />} />
         </Routes>
     </BrowserRouter>
