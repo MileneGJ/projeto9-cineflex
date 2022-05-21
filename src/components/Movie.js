@@ -1,10 +1,12 @@
 import React from "react";
 import styled from 'styled-components'
 import axios from 'axios'
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Footer from "./Footer.js";
+import Header from "./Header.js";
 
 export default function Movie() {
+    const navigate = useNavigate();
     const [showtimes, setShowtimes] = React.useState([]);
     const { idFilme } = useParams();
     React.useEffect(() => {
@@ -33,6 +35,8 @@ export default function Movie() {
     }
 
     return (
+        <>
+        <Header><button onClick={()=>navigate("/")}>Voltar</button></Header>
         <Container>
             <h2>Selecione o horário</h2>
             <Showtimes>
@@ -40,6 +44,7 @@ export default function Movie() {
             </Showtimes>
             <Footer image={showtimes.image} title={showtimes.title} selectedShowtime={false} day={""} time={""} />
         </Container>
+        </>
     )
 }
 

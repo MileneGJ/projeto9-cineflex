@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header';
 
 export default function Success({ reservationInfo, setReservationInfo }) {
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function Success({ reservationInfo, setReservationInfo }) {
 
     function reload (){
         setReservationInfo({
+            sessionID:"",
             title: "",
             day: "",
             time: "",
@@ -39,6 +41,8 @@ export default function Success({ reservationInfo, setReservationInfo }) {
     }
 
     return (
+        <>
+        <Header><button onClick={() => navigate(`/assentos/${reservationInfo.sessionID}`)}>Voltar</button></Header>
         <Container>
             <h2>Pedido feito <br/>com sucesso!</h2>
             <InfoPurchase>
@@ -46,6 +50,7 @@ export default function Success({ reservationInfo, setReservationInfo }) {
             </InfoPurchase>
             <button onClick={reload}>Voltar para Home</button>
         </Container>
+        </>
     )
 }
 

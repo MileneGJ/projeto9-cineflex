@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import styled from 'styled-components';
 import React from "react";
 import InTheaters from './InTheaters';
 import Movie from './Movie';
 import Session from './Session';
 import Success from './Success';
+import Header from "./Header";
 
 export default function App () {
     const [reservationInfo, setReservationInfo] = React.useState({
+        sessionID:"",
         title: "",
         day: "",
         time: "",
@@ -18,9 +19,7 @@ export default function App () {
 
     return (
     <BrowserRouter>
-        <Header>
-            <h1>CINEFLEX</h1>
-        </Header>
+        <Header />
         <Routes>
         <Route path="/" element={<InTheaters />} />
         <Route path="/sessoes/:idFilme" element={<Movie />} />
@@ -30,20 +29,3 @@ export default function App () {
     </BrowserRouter>
     )
 }
-
-const Header = styled.div` 
-width:100%;
-background-color: #C3CFD9;
-height:70px;
-display:flex;
-justify-content:center;
-align-items:center;
-position:fixed;
-top:0;
-left:0;
-
-    h1{
-        font-size:34px;
-        color:#E8833A;
-    }
-`

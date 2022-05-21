@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import Legend from "./Legend";
-import Footer from "./Footer.js";
+import Footer from "./Footer";
+import Header from "./Header";
 
-export default function Session({reservationInfo,setReservationInfo}) {
+export default function Session({ reservationInfo, setReservationInfo }) {
     const navigate = useNavigate()
     const [seatsList, setSeatsList] = React.useState([]);
     const { idSessao } = useParams();
@@ -22,6 +23,7 @@ export default function Session({reservationInfo,setReservationInfo}) {
             }))
 
             setSeatsList({
+                movieID:response.data.movie.id,
                 time: response.data.name,
                 day: response.data.day.weekday,
                 dayNumber: response.data.day.date,
@@ -86,34 +88,11 @@ export default function Session({reservationInfo,setReservationInfo}) {
         colorBorder: "#F7C52B"
     }];
 
-    function saveInfoPurchase(e) {
+       function goToSuccess(e) {
         e.preventDefault();
-        goToSuccess();
-    }
-
-
-    function goToSuccess () {
-        let selectedSeats = seatsList.seats.filter(seat => seat.selected===true);
-        /*const modifiedSeats = seatsList.seats.map(seat => {
-            if (seat.selected === true) {
-                selectedSeats.push({
-                    id: seat.id,
-                    name: seat.name
-                })
-                return (
-                    {
-                        id: seat.id,
-                        name: seat.name,
-                        isAvailable: false,
-                        selected: false
-                    }
-                );
-            } else {
-                return seat
-            }
-        });
-        setSeatsList({ ...seatsList, seats: modifiedSeats });*/
+        let selectedSeats = seatsList.seats.filter(seat => seat.selected === true);
         setReservationInfo(() => ({
+            sessionID:idSessao,
             title: seatsList.title,
             day: seatsList.dayNumber,
             time: seatsList.time,
@@ -128,18 +107,12 @@ export default function Session({reservationInfo,setReservationInfo}) {
         };
         const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many", postInfo);
         promise.then(() => navigate("/sucesso"));
-        /*promise.catch(handleError);*/
     }
 
 
-    /*function handleError(error){
-        alert(error.response.status)
-        if(error.response.status===500){
-            goToSuccess();
-        }
-    }*/
-
     return (
+        <>
+        <Header><button onClick={() => navigate(`/sessoes/${seatsList.movieID}`)}>Voltar</button></Header>
         <Container>
             <h2>Selecione o(s) assento(s)</h2>
             <Seats>
@@ -155,7 +128,7 @@ export default function Session({reservationInfo,setReservationInfo}) {
                 {infoLegend.map((info, index) => <Legend key={index} name={info.name} background={info.colorFill} color={info.colorBorder} />)}
             </SeatsLeg>
 
-            <form onSubmit={saveInfoPurchase}>
+            <form onSubmit={goToSuccess}>
                 <InfoUser>
                     <label htmlFor="name">Nome do comprador:</label>
                     <input type="text" value={reservationInfo.userName} placeholder="Digite seu nome..." onChange={e => setReservationInfo({ ...reservationInfo, userName: e.target.value })} required />
@@ -169,6 +142,7 @@ export default function Session({reservationInfo,setReservationInfo}) {
             <Footer image={seatsList.image} title={seatsList.title} selectedShowtime={true} day={seatsList.day} time={seatsList.time} />
 
         </Container>
+        </>
     )
 }
 
