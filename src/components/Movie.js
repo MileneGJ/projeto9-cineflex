@@ -21,14 +21,14 @@ export default function Movie() {
 
     function Showtime({ days }) {
         return (
-            <div>
+            <>
                 <p>{days.weekday} - {days.date}</p>
                 {days.showtimes.map(times =>
                     <Link to={`/assentos/${times.id}`} key={times.id}>
                     <button >{times.name}</button>
                     </Link>
                 )}
-            </div>
+            </>
         )
     }
 

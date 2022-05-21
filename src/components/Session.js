@@ -1,13 +1,13 @@
 import React from "react";
 import styled from 'styled-components';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Legend from "./Legend";
 import Footer from "./Footer.js";
 
-export default function Session() {
+export default function Session({reservationInfo,setReservationInfo}) {
+    const navigate = useNavigate()
     const [seatsList, setSeatsList] = React.useState([]);
-
     const { idSessao } = useParams();
 
     React.useEffect(() => {
@@ -24,6 +24,7 @@ export default function Session() {
             setSeatsList({
                 time: response.data.name,
                 day: response.data.day.weekday,
+                dayNumber: response.data.day.date,
                 image: response.data.movie.posterURL,
                 title: response.data.movie.title,
                 seats: modifiedSeats
@@ -85,8 +86,58 @@ export default function Session() {
         colorBorder: "#F7C52B"
     }];
 
+    function saveInfoPurchase(e) {
+        e.preventDefault();
+        goToSuccess();
+    }
 
-    
+
+    function goToSuccess () {
+        let selectedSeats = seatsList.seats.filter(seat => seat.selected===true);
+        /*const modifiedSeats = seatsList.seats.map(seat => {
+            if (seat.selected === true) {
+                selectedSeats.push({
+                    id: seat.id,
+                    name: seat.name
+                })
+                return (
+                    {
+                        id: seat.id,
+                        name: seat.name,
+                        isAvailable: false,
+                        selected: false
+                    }
+                );
+            } else {
+                return seat
+            }
+        });
+        setSeatsList({ ...seatsList, seats: modifiedSeats });*/
+        setReservationInfo(() => ({
+            title: seatsList.title,
+            day: seatsList.dayNumber,
+            time: seatsList.time,
+            seats: selectedSeats.map(seat => seat.name),
+            userName: reservationInfo.userName,
+            userDoc: reservationInfo.userDoc
+        }));
+        const postInfo = {
+            ids: selectedSeats.map(seat => seat.id),
+            name: reservationInfo.userName,
+            cpf: reservationInfo.userDoc
+        };
+        const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many", postInfo);
+        promise.then(() => navigate("/sucesso"));
+        /*promise.catch(handleError);*/
+    }
+
+
+    /*function handleError(error){
+        alert(error.response.status)
+        if(error.response.status===500){
+            goToSuccess();
+        }
+    }*/
 
     return (
         <Container>
@@ -104,18 +155,19 @@ export default function Session() {
                 {infoLegend.map((info, index) => <Legend key={index} name={info.name} background={info.colorFill} color={info.colorBorder} />)}
             </SeatsLeg>
 
+            <form onSubmit={saveInfoPurchase}>
+                <InfoUser>
+                    <label htmlFor="name">Nome do comprador:</label>
+                    <input type="text" value={reservationInfo.userName} placeholder="Digite seu nome..." onChange={e => setReservationInfo({ ...reservationInfo, userName: e.target.value })} required />
+                    <label htmlFor="document">CPF do comprador:</label>
+                    <input type="text" value={reservationInfo.userDoc} placeholder="Digite seu CPF..." onChange={e => setReservationInfo({ ...reservationInfo, userDoc: e.target.value })} required />
 
-            <InfoUser>
-                <p>Nome do comprador:</p>
-                <input type="text" placeholder="Digite seu nome..." />
-                <p>CPF do comprador:</p>
-                <input type="text" placeholder="Digite seu CPF..." />
-
-            </InfoUser>
-            <button>Reservar assento(s)</button>
+                </InfoUser>
+                <button type="submit">Reservar assento(s)</button>
+            </form>
 
             <Footer image={seatsList.image} title={seatsList.title} selectedShowtime={true} day={seatsList.day} time={seatsList.time} />
-            
+
         </Container>
     )
 }
@@ -164,17 +216,12 @@ border:solid 1px ${props => props.colorset === "1" ? "#1AAE9E" : props.colorset 
 border-radius:50px;
 `
 
-
 const SeatsLeg = styled.div`
 display:flex;
 justify-content:space-evenly;
 width:100%;
 margin-bottom:60px;
 `
-
-
-
-
 
 const InfoUser = styled.div`
 width:100%;
