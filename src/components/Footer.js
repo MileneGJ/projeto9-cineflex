@@ -34,7 +34,7 @@ align-items:center;
 h3{
     color:#293845;
     font-size:26px;
-    margin-left:15px;
+    margin:0 30px 0 15px;
     line-height:35px;
 }
 `

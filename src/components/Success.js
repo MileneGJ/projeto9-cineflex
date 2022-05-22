@@ -14,15 +14,21 @@ export default function Success({ reservationInfo, setReservationInfo }) {
         info: reservationInfo.seats.map(seat => `Assento ${seat}`)
     }, {
         title: "Comprador(a)",
-        info: [`Nome: ${reservationInfo.userName}`,
-        `CPF: ${reservationInfo.userDoc}`]
+        info: reservationInfo.buyers.map((b,index)=> {return(
+        <>
+        <p>Assento: {reservationInfo.seats[index]}</p>
+        <p>Nome: {b.userName}</p> 
+        <p>CPF: {b.userDoc}</p>
+        </>)})
     }]
 
     function PurchaseData({ title, info}) {
         return (
             <div>
                 <h4>{title}</h4>
-                {info.map((text,index)=> <p key={index}>{text}</p>)}
+                <ul>
+                {info.map((text,index)=> <li key={index}>{text}</li>)}
+                </ul>
             </div>
         )
     }
@@ -94,8 +100,12 @@ h4{
     font-size:24px;
     font-weight:700;
 }
-p{
+p,li{
     font-size:22px;
+    line-height:30px;
+}
+
+li{
     margin:10px 0;
 }
 `

@@ -13,8 +13,7 @@ export default function App () {
         day: "",
         time: "",
         seats: [],
-        userName: "",
-        userDoc: ""
+        buyers:[]
     })
 
     return (
