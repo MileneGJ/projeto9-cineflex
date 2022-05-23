@@ -33,6 +33,7 @@ export default function Success({ reservationInfo, setReservationInfo }) {
         )
     }
 
+    //Ao voltar para Home, zerar dados da reserva e ir para filmes em cartaz
     function reload (){
         setReservationInfo({
             sessionID:"",

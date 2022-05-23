@@ -8,21 +8,6 @@ import Header from "./Header";
 import Seat from "./Seat";
 
 export default function Session({ reservationInfo, setReservationInfo }) {
-
-    const infoLegend = [{
-        name: "Selecionado",
-        colorFill: "#8DD7CF",
-        colorBorder: "#1AAE9E"
-    }, {
-        name: "Disponível",
-        colorFill: "#C3CFD9",
-        colorBorder: "#808F9D"
-    }, {
-        name: "Indisponível",
-        colorFill: "#FBE192",
-        colorBorder: "#F7C52B"
-    }];
-
     const navigate = useNavigate()
     const [seatsList, setSeatsList] = React.useState([]);
     const { idSessao } = useParams();
@@ -49,17 +34,34 @@ export default function Session({ reservationInfo, setReservationInfo }) {
         });
     }, [])
 
+    const infoLegend = [{
+        name: "Selecionado",
+        colorFill: "#8DD7CF",
+        colorBorder: "#1AAE9E"
+    }, {
+        name: "Disponível",
+        colorFill: "#C3CFD9",
+        colorBorder: "#808F9D"
+    }, {
+        name: "Indisponível",
+        colorFill: "#FBE192",
+        colorBorder: "#F7C52B"
+    }];
 
-
+    //Ações realizadas ao selecionar um assento
     function selecionar(index) {
         let CurrentUserName = "";
         let CurrentUserDoc = "";
+
+        //Guardando informações preenchidas dos compradores
         if (reservationInfo.buyers.length !== 0) {
             if (reservationInfo.buyers.filter(b => b.seat === index).length !== 0) {
                 CurrentUserName = reservationInfo.buyers.filter(b => b.seat === index)[0].userName
                 CurrentUserDoc = reservationInfo.buyers.filter(b => b.seat === index)[0].userDoc
             }
         }
+
+        //Verificando disponibilidade e seleção prévia do assento
         const modifiedSeats = seatsList.seats.map(seats => {
             if (seats.id !== index) {
                 return seats;
@@ -89,6 +91,7 @@ export default function Session({ reservationInfo, setReservationInfo }) {
             }
         });
 
+        //Atualizando o estado das reservas e dos assentos
         let selectedSeats = modifiedSeats.filter(seat => seat.selected);
         let buyersInfo = selectedSeats.map(seat => {
             if (reservationInfo.buyers.length === 0) {
@@ -116,9 +119,11 @@ export default function Session({ reservationInfo, setReservationInfo }) {
     }
 
 
+    //Ações realizadas ao reservar os assentos com os dados dos compradores
     function goToSuccess(e) {
         e.preventDefault();
         let selectedSeats = seatsList.seats.filter(seat => seat.selected);
+        //Guardando informações a serem exibidas na página de sucesso
         setReservationInfo(() => ({
             sessionID: idSessao,
             title: seatsList.title,
@@ -128,6 +133,7 @@ export default function Session({ reservationInfo, setReservationInfo }) {
             buyers: reservationInfo.buyers
         }));
 
+        //Criando objeto com as especificações corretas para postado no servidor 
         const compradores = reservationInfo.buyers.map(b => ({
             idAssento: b.seat,
             nome: b.userName,
@@ -139,11 +145,15 @@ export default function Session({ reservationInfo, setReservationInfo }) {
             compradores: compradores
         };
         const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many", postInfo);
+        //Ir para página de sucesso ao terminar
         promise.then(() => navigate("/sucesso"));
     }
 
 
+    //Ações realizadas ao alterar inputs de nome e CPF
     function modifyReservation(e, seatID, field) {
+
+        //Atualizando informação da reserva conforme o campo e id do input preenchido 
         const updatedReserv = reservationInfo.buyers.map(function (b) {
             if (b.seat === seatID) {
                 if (field === "userName") {
@@ -167,13 +177,18 @@ export default function Session({ reservationInfo, setReservationInfo }) {
         setReservationInfo({ ...reservationInfo, buyers: updatedReserv });
     }
 
+    //Ações para tratar o valor a ser mostrado nos inputs 
     function showValue(seatID, field) {
         let finalValue = "";
+
+        //Verificando se o objeto já foi atualizado na variável de reservas
         if (reservationInfo.buyers.filter(b => b.seat === seatID).length !== 0) {
 
+            //No caso do campo de nome, apenas retornar a string
             if (field === "userName") {
                 finalValue = reservationInfo.buyers.filter(b => b.seat === seatID)[0].userName
             } else {
+                //No caso de CPF, formatar o documento com a pontuação correta
                 let resDoc = reservationInfo.buyers.filter(b => b.seat === seatID)[0].userDoc
                 for (let i = 0; i < resDoc.length; i++) {
                     finalValue += resDoc[i];
